@@ -1,16 +1,89 @@
-# React + Vite
+# Artist Portfolio Website
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A modern, high-performance portfolio website designed for artists to showcase their work. Built with **React**, **Vite**, and **Sanity.io**.
 
-Currently, two official plugins are available:
+![Homepage Preview](./public/vite.svg) <!-- Replace with actual screenshot later if available -->
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## ✨ Features
 
-## React Compiler
+*   **Dynamic Gallery**: Fetches painting data dynamically from Sanity CMS with filtering capabilities (Oil, Acrylic, Watercolor).
+*   **Immersive Detail View**: Modal-based painting details with keyboard navigation (Arrow keys, Esc) and deep linking.
+*   **Premium Visuals**: Custom "Premium Dark" and "Premium Light" themes with glassmorphism effects, smooth transitions, and micro-animations.
+*   **Theme Switching**: User-controlled Light/Dark mode with system preference detection and persistence.
+*   **CMS Integration**: Fully managed content via Sanity Studio (Paintings, Artist Profile, Site Settings).
+*   **Contact Form**: Functional contact form powered by Web3Forms.
+*   **Responsive Design**: Fully responsive layout optimized for mobile, tablet, and desktop.
+*   **SEO Optimized**: Dynamic metadata and structured content.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## 🛠️ Technology Stack
 
-## Expanding the ESLint configuration
+*   **Frontend**: React 18, Vite
+*   **Styling**: Vanilla CSS (Variables, Flexbox/Grid), Lucide React (Icons)
+*   **CMS**: Sanity.io (Headless CMS)
+*   **Forms**: Web3Forms
+*   **Deployment**: Vercel
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## 🚀 Getting Started
+
+### Prerequisites
+
+*   Node.js (v18 or higher)
+*   npm or yarn
+
+### Installation
+
+1.  **Clone the repository:**
+    ```bash
+    git clone <repository-url>
+    cd artist-portfolio
+    ```
+
+2.  **Install dependencies:**
+    ```bash
+    npm install
+    ```
+
+3.  **Configure Environment Variables:**
+    Create a `.env` file in the root directory and add the following:
+    ```env
+    VITE_SANITY_PROJECT_ID=your_project_id
+    VITE_SANITY_DATASET=production
+    VITE_WEB3FORMS_ACCESS_KEY=your_access_key
+    ```
+
+4.  **Run the development server:**
+    ```bash
+    npm run dev
+    ```
+
+## 🎨 Content Management (Sanity)
+
+This project uses Sanity.io for content management.
+
+1.  **Enter the Studio directory:**
+    ```bash
+    cd artist-portfolio
+    ```
+
+2.  **Install Studio dependencies:**
+    ```bash
+    npm install
+    ```
+
+3.  **Run Sanity Studio locally:**
+    ```bash
+    npm run dev
+    ```
+
+## 📦 Deployment
+
+The project is optimized for deployment on **Vercel**.
+
+1.  Push your code to a GitHub repository.
+2.  Import the project into Vercel.
+3.  Add the Environment Variables in the Vercel dashboard.
+4.  Deploy!
+
+## 📄 License
+
+This project is licensed under the MIT License.
