@@ -89,16 +89,18 @@ const Home = () => {
               }}
             />
             {/* Gradient Overlays */}
-            <div style={{
-              position: 'absolute',
-              inset: 0,
-              background: 'linear-gradient(to right, rgba(10,10,10,0.95) 0%, rgba(10,10,10,0.6) 50%, rgba(10,10,10,0.3) 100%)'
-            }} />
-            <div style={{
-              position: 'absolute',
-              inset: 0,
-              background: 'linear-gradient(to top, rgba(10,10,10,0.8) 0%, transparent 50%)'
-            }} />
+            <div
+              className="hero-overlay-gradient"
+              style={{
+                position: 'absolute',
+                inset: 0,
+              }} />
+            <div
+              className="hero-overlay-bottom"
+              style={{
+                position: 'absolute',
+                inset: 0,
+              }} />
           </div>
         )}
 
@@ -157,15 +159,7 @@ const Home = () => {
         </div>
 
         {/* Scroll Indicator */}
-        <div style={{
-          position: 'absolute',
-          bottom: '3rem',
-          left: '50%',
-          transform: 'translateX(-50%)',
-          textAlign: 'center',
-          opacity: 0,
-          animation: 'fadeInUp 0.8s ease 1.2s forwards'
-        }}>
+        <div className="scroll-indicator">
           <p style={{
             fontSize: '0.75rem',
             textTransform: 'uppercase',
@@ -179,7 +173,8 @@ const Home = () => {
             color: 'var(--text-muted)',
             animation: 'bounce 2s infinite'
           }} />
-          <style>{`
+        </div>
+        <style>{`
             @keyframes fadeInUp {
               from { opacity: 0; transform: translateY(30px); }
               to { opacity: 1; transform: translateY(0); }
@@ -189,7 +184,6 @@ const Home = () => {
               50% { transform: translateY(10px); }
             }
           `}</style>
-        </div>
       </section>
 
       {/* Selected Works Section */}
@@ -279,8 +273,8 @@ const Home = () => {
             </Link>
           </div>
         </div>
-      </section>
-    </div>
+      </section >
+    </div >
   );
 };
 

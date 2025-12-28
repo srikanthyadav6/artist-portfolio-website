@@ -1,23 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Inter:wght@300;400;500;600&display=swap');
 
 :root {
-  /* Premium Dark Palette */
-  --bg-primary: #0A0A0A;
-  --bg-secondary: #111111;
-  --bg-tertiary: #1A1A1A;
-  --bg-card: rgba(255, 255, 255, 0.03);
-  --bg-glass: rgba(255, 255, 255, 0.05);
-
-  --text-primary: #FAFAFA;
-  --text-secondary: #A0A0A0;
-  --text-muted: #666666;
-
-  --accent-color: #C4A777;
-  --accent-glow: rgba(196, 167, 119, 0.3);
-  --accent-hover: #D4B787;
-
-  --border-color: rgba(255, 255, 255, 0.1);
-  --border-hover: rgba(255, 255, 255, 0.2);
+  /* Premium Dark Palette - Moved to [data-theme="dark"] */
 
   /* Premium Typography */
   --font-serif: 'Cormorant Garamond', Georgia, serif;
@@ -38,11 +22,61 @@
   --transition-fast: 0.15s cubic-bezier(0.4, 0, 0.2, 1);
   --transition-medium: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   --transition-slow: 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
 
-  /* Shadows */
+/* Dark Theme (Default) */
+[data-theme="dark"] {
+  --bg-primary: #0A0A0A;
+  --bg-secondary: #111111;
+  --bg-tertiary: #1A1A1A;
+  --bg-card: rgba(255, 255, 255, 0.03);
+  --bg-glass: rgba(255, 255, 255, 0.05);
+
+  --text-primary: #FAFAFA;
+  --text-secondary: #A0A0A0;
+  --text-muted: #666666;
+
+  --accent-color: #C4A777;
+  --accent-glow: rgba(196, 167, 119, 0.3);
+  --accent-hover: #D4B787;
+
+  --border-color: rgba(255, 255, 255, 0.1);
+  --border-hover: rgba(255, 255, 255, 0.2);
+
   --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
   --shadow-md: 0 8px 32px rgba(0, 0, 0, 0.4);
   --shadow-lg: 0 16px 64px rgba(0, 0, 0, 0.5);
+  --shadow-glow: 0 0 40px var(--accent-glow);
+}
+
+/* Light Theme */
+[data-theme="light"] {
+  --bg-primary: #FAF9F6;
+  /* Off-white / Cream */
+  --bg-secondary: #F0EEE9;
+  /* Slightly darker cream */
+  --bg-tertiary: #E5E2DC;
+  /* Stone */
+  --bg-card: rgba(0, 0, 0, 0.03);
+  --bg-glass: rgba(255, 255, 255, 0.7);
+  /* Frosted glass look */
+
+  --text-primary: #1A1A1A;
+  /* Charcoal */
+  --text-secondary: #555555;
+  --text-muted: #888888;
+
+  --accent-color: #B08D55;
+  /* Slightly darker gold for contrast on light */
+  --accent-glow: rgba(176, 141, 85, 0.2);
+  --accent-hover: #C4A777;
+
+  --border-color: rgba(0, 0, 0, 0.08);
+  --border-hover: rgba(0, 0, 0, 0.15);
+
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 8px 32px rgba(0, 0, 0, 0.08);
+  --shadow-lg: 0 16px 64px rgba(0, 0, 0, 0.1);
   --shadow-glow: 0 0 40px var(--accent-glow);
 }
 
@@ -251,11 +285,57 @@ button {
   box-shadow: var(--shadow-glow);
 }
 
+/* Scroll Indicator */
+.scroll-indicator {
+  position: absolute;
+  bottom: 2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  text-align: center;
+  z-index: 10;
+  opacity: 0;
+  animation: fadeInUp 0.8s ease 1.2s forwards;
+}
+
+/* Hide scroll indicator on very short screens to avoid overlap */
+@media (max-height: 700px) {
+  .scroll-indicator {
+    display: none;
+  }
+}
+
 /* Navbar Blur */
 .navbar-blur {
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   background: rgba(10, 10, 10, 0.8);
+}
+
+/* Light theme navbar override */
+[data-theme="light"] .navbar-blur {
+  background: rgba(245, 242, 235, 0.7);
+  /* Creamier & more translucent (0.85 -> 0.7) */
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+  backdrop-filter: blur(20px);
+  /* Increase blur to compensate for transparency */
+  -webkit-backdrop-filter: blur(20px);
+}
+
+/* Hero Overlays - Theme Aware */
+.hero-overlay-gradient {
+  background: linear-gradient(to right, rgba(10, 10, 10, 0.95) 0%, rgba(10, 10, 10, 0.6) 50%, rgba(10, 10, 10, 0.3) 100%);
+}
+
+.hero-overlay-bottom {
+  background: linear-gradient(to top, rgba(10, 10, 10, 0.8) 0%, transparent 50%);
+}
+
+[data-theme="light"] .hero-overlay-gradient {
+  background: linear-gradient(to right, rgba(250, 249, 246, 0.95) 0%, rgba(250, 249, 246, 0.7) 50%, rgba(250, 249, 246, 0.4) 100%);
+}
+
+[data-theme="light"] .hero-overlay-bottom {
+  background: linear-gradient(to top, rgba(250, 249, 246, 0.9) 0%, transparent 50%);
 }
 
 /* Responsive */

@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Menu, X } from 'lucide-react';
 import { client } from '../sanityClient';
+import ThemeToggle from './ThemeToggle';
 import '../index.css';
 
 const Navbar = () => {
@@ -45,9 +46,7 @@ const Navbar = () => {
                 right: 0,
                 zIndex: 1000,
                 padding: '1.5rem 0',
-                borderBottom: scrolled ? '1px solid var(--border-color)' : '1px solid transparent',
                 transition: 'all var(--transition-medium)',
-                background: scrolled ? 'rgba(10, 10, 10, 0.9)' : 'transparent'
             }}
         >
             <div className="container" style={{
@@ -69,41 +68,48 @@ const Navbar = () => {
                     {siteName}
                 </Link>
 
-                {/* Desktop Menu */}
-                <div className="desktop-menu" style={{ display: 'flex', gap: '3rem' }}>
-                    {links.map((link) => (
-                        <Link
-                            key={link.name}
-                            to={link.path}
-                            style={{
-                                position: 'relative',
-                                fontSize: '0.8rem',
-                                textTransform: 'uppercase',
-                                letterSpacing: '0.15em',
-                                color: location.pathname === link.path ? 'var(--accent-color)' : 'var(--text-secondary)',
-                                transition: 'color var(--transition-fast)',
-                                paddingBottom: '4px'
-                            }}
-                            onMouseOver={(e) => e.currentTarget.style.color = 'var(--accent-color)'}
-                            onMouseOut={(e) => {
-                                e.currentTarget.style.color = location.pathname === link.path
-                                    ? 'var(--accent-color)'
-                                    : 'var(--text-secondary)';
-                            }}
-                        >
-                            {link.name}
-                            {/* Animated underline */}
-                            <span style={{
-                                position: 'absolute',
-                                bottom: 0,
-                                left: 0,
-                                width: location.pathname === link.path ? '100%' : '0%',
-                                height: '1px',
-                                background: 'var(--accent-color)',
-                                transition: 'width var(--transition-medium)'
-                            }} />
-                        </Link>
-                    ))}
+                <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+                    {/* Desktop Menu */}
+                    <div className="desktop-menu" style={{ display: 'flex', gap: '3rem' }}>
+                        {links.map((link) => (
+                            <Link
+                                key={link.name}
+                                to={link.path}
+                                style={{
+                                    position: 'relative',
+                                    fontSize: '0.8rem',
+                                    textTransform: 'uppercase',
+                                    letterSpacing: '0.15em',
+                                    color: location.pathname === link.path ? 'var(--accent-color)' : 'var(--text-secondary)',
+                                    transition: 'color var(--transition-fast)',
+                                    paddingBottom: '4px'
+                                }}
+                                onMouseOver={(e) => e.currentTarget.style.color = 'var(--accent-color)'}
+                                onMouseOut={(e) => {
+                                    e.currentTarget.style.color = location.pathname === link.path
+                                        ? 'var(--accent-color)'
+                                        : 'var(--text-secondary)';
+                                }}
+                            >
+                                {link.name}
+                                {/* Animated underline */}
+                                <span style={{
+                                    position: 'absolute',
+                                    bottom: 0,
+                                    left: 0,
+                                    width: location.pathname === link.path ? '100%' : '0%',
+                                    height: '1px',
+                                    background: 'var(--accent-color)',
+                                    transition: 'width var(--transition-medium)'
+                                }} />
+                            </Link>
+                        ))}
+                    </div>
+
+                    {/* Theme Toggle (Desktop) */}
+                    <div className="desktop-menu">
+                        <ThemeToggle />
+                    </div>
                 </div>
 
                 {/* Mobile Menu Icon */}
@@ -140,6 +146,7 @@ const Navbar = () => {
                         zIndex: 999
                     }}
                 >
+                    <ThemeToggle />
                     {links.map((link) => (
                         <Link
                             key={link.name}
