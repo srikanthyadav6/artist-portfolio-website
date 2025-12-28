@@ -1,11 +1,13 @@
 import { useState, useEffect, useCallback } from 'react';
 import { client, urlFor } from '../sanityClient';
 import PaintingModal from '../components/PaintingModal';
+import Spinner from '../components/ui/Spinner';
 
 const Gallery = () => {
     const [paintings, setPaintings] = useState([]);
     const [filter, setFilter] = useState('All');
     const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
     const [selectedIndex, setSelectedIndex] = useState(null);
 
     useEffect(() => {
@@ -14,7 +16,13 @@ const Gallery = () => {
                 setPaintings(data);
                 setLoading(false);
             })
-            .catch(console.error);
+            .catch((err) => {
+                if (import.meta.env.DEV) {
+                    console.error('Failed to fetch paintings:', err.message);
+                }
+                setError('Failed to load gallery. Please try again.');
+                setLoading(false);
+            });
     }, []);
 
     const categories = ['All', ...new Set(paintings.map(p => p.category).filter(Boolean))];
@@ -48,37 +56,23 @@ const Gallery = () => {
     if (loading) {
         return (
             <div style={{ height: '60vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                {/* Skeleton Loader */}
-                <div style={{ width: '100%', maxWidth: '1200px', padding: '0 2rem' }}>
-                    <div style={{
-                        height: '60px',
-                        background: 'var(--bg-tertiary)',
-                        borderRadius: '8px',
-                        marginBottom: '2rem',
-                        animation: 'pulse 1.5s ease-in-out infinite'
-                    }} />
-                    <div style={{
-                        display: 'grid',
-                        gridTemplateColumns: 'repeat(3, 1fr)',
-                        gap: '2rem'
-                    }}>
-                        {[1, 2, 3].map(i => (
-                            <div key={i} style={{
-                                height: '300px',
-                                background: 'var(--bg-tertiary)',
-                                borderRadius: '12px',
-                                animation: 'pulse 1.5s ease-in-out infinite',
-                                animationDelay: `${i * 0.1}s`
-                            }} />
-                        ))}
-                    </div>
-                </div>
-                <style>{`
-          @keyframes pulse {
-            0%, 100% { opacity: 0.4; }
-            50% { opacity: 0.7; }
-          }
-        `}</style>
+                <Spinner size={40} />
+            </div>
+        );
+    }
+
+    if (error) {
+        return (
+            <div
+                className="container"
+                role="alert"
+                style={{ padding: '10rem 0', textAlign: 'center' }}
+            >
+                <h2 className="text-serif" style={{ marginBottom: '1rem' }}>Unable to Load Gallery</h2>
+                <p style={{ color: 'var(--text-secondary)', marginBottom: '2rem' }}>{error}</p>
+                <button className="btn-primary" onClick={() => window.location.reload()}>
+                    Try Again
+                </button>
             </div>
         );
     }
@@ -86,7 +80,7 @@ const Gallery = () => {
     return (
         <div style={{ minHeight: '100vh', paddingTop: '2rem' }}>
             {/* Header */}
-            <section style={{ padding: '6rem 0 4rem', textAlign: 'center' }}>
+            <section aria-label="Gallery header" style={{ padding: '6rem 0 4rem', textAlign: 'center' }}>
                 <div className="container">
                     <p style={{
                         color: 'var(--accent-color)',
@@ -160,7 +154,7 @@ const Gallery = () => {
             </section>
 
             {/* Gallery Grid */}
-            <section style={{ padding: '2rem 0 6rem' }}>
+            <section aria-label="Artwork gallery" style={{ padding: '2rem 0 6rem' }}>
                 <div className="container">
                     {filteredPaintings.length === 0 ? (
                         /* Empty State */
@@ -195,16 +189,16 @@ const Gallery = () => {
                                     key={painting._id}
                                     role="button"
                                     tabIndex={0}
-                                    className="gallery-item"
+                                    aria-label={`View ${painting.title}`}
+                                    className="gallery-item glass-card glow-on-hover"
                                     onClick={() => handleOpenModal(index)}
                                     onKeyDown={(e) => e.key === 'Enter' && handleOpenModal(index)}
                                     style={{
-                                        position: 'relative',
                                         overflow: 'hidden',
                                         borderRadius: '12px',
                                         cursor: 'pointer',
-                                        aspectRatio: '4/5',
-                                        outline: 'none'
+                                        outline: 'none',
+                                        transition: 'transform var(--transition-medium)'
                                     }}
                                     onFocus={(e) => {
                                         e.currentTarget.style.boxShadow = '0 0 0 3px var(--accent-color)';
@@ -212,57 +206,42 @@ const Gallery = () => {
                                     onBlur={(e) => {
                                         e.currentTarget.style.boxShadow = 'none';
                                     }}
+                                    onMouseOver={(e) => e.currentTarget.style.transform = 'translateY(-8px)'}
+                                    onMouseOut={(e) => e.currentTarget.style.transform = 'translateY(0)'}
                                 >
-                                    {painting.image && (
-                                        <img
-                                            src={urlFor(painting.image).width(700).height(875).url()}
-                                            alt={painting.title}
-                                            loading="lazy"
-                                            style={{
-                                                width: '100%',
-                                                height: '100%',
-                                                objectFit: 'cover',
-                                                transition: 'transform 0.6s cubic-bezier(0.4, 0, 0.2, 1)'
-                                            }}
-                                            className="gallery-img"
-                                        />
-                                    )}
-                                    {/* Overlay */}
-                                    <div
-                                        className="overlay"
-                                        style={{
-                                            position: 'absolute',
-                                            inset: 0,
-                                            background: 'linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.3) 50%, transparent 100%)',
-                                            opacity: 0,
-                                            transition: 'opacity 0.4s ease',
-                                            display: 'flex',
-                                            flexDirection: 'column',
-                                            justifyContent: 'flex-end',
-                                            padding: '2rem'
-                                        }}
-                                    >
-                                        <p style={{
-                                            color: 'var(--accent-color)',
-                                            fontSize: '0.75rem',
-                                            textTransform: 'uppercase',
-                                            letterSpacing: '0.2em',
-                                            marginBottom: '0.5rem'
-                                        }}>
-                                            {painting.category}
-                                        </p>
-                                        <h3 className="text-serif" style={{
-                                            fontSize: '1.5rem',
-                                            color: '#fff',
-                                            marginBottom: '0.5rem'
+                                    <div className="image-zoom" style={{ height: '350px' }}>
+                                        {painting.image && (
+                                            <img
+                                                src={urlFor(painting.image).width(700).height(875).url()}
+                                                alt={painting.title}
+                                                loading="lazy"
+                                                style={{
+                                                    width: '100%',
+                                                    height: '100%',
+                                                    objectFit: 'cover'
+                                                }}
+                                                className="gallery-img"
+                                            />
+                                        )}
+                                    </div>
+                                    {/* Title section below image */}
+                                    <div style={{ padding: '1.5rem 2rem' }}>
+                                        <h3 style={{
+                                            fontSize: '1.4rem',
+                                            marginBottom: '0.5rem',
+                                            fontWeight: 500,
+                                            color: 'var(--text-primary)'
                                         }}>
                                             {painting.title}
                                         </h3>
-                                        {painting.price && (
-                                            <p style={{ color: 'rgba(255,255,255,0.7)', fontSize: '0.9rem' }}>
-                                                {painting.price}
-                                            </p>
-                                        )}
+                                        <p style={{
+                                            color: 'var(--text-muted)',
+                                            fontSize: '0.85rem',
+                                            textTransform: 'uppercase',
+                                            letterSpacing: '0.1em'
+                                        }}>
+                                            {painting.category}
+                                        </p>
                                     </div>
                                 </div>
                             ))}
@@ -271,7 +250,6 @@ const Gallery = () => {
                 </div>
             </section>
 
-            {/* Modal */}
             {selectedIndex !== null && (
                 <PaintingModal
                     painting={filteredPaintings[selectedIndex]}
@@ -282,17 +260,6 @@ const Gallery = () => {
                     hasPrev={selectedIndex > 0}
                 />
             )}
-
-            <style>{`
-        .gallery-item:hover .gallery-img,
-        .gallery-item:focus .gallery-img {
-          transform: scale(1.1);
-        }
-        .gallery-item:hover .overlay,
-        .gallery-item:focus .overlay {
-          opacity: 1;
-        }
-      `}</style>
         </div>
     );
 };

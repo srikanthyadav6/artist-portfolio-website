@@ -7,7 +7,8 @@ const ThemeToggle = () => {
     return (
         <button
             onClick={toggleTheme}
-            aria-label="Toggle theme"
+            aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode. Currently ${theme} mode.`}
+            title={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
             style={{
                 display: 'flex',
                 alignItems: 'center',
@@ -18,7 +19,7 @@ const ThemeToggle = () => {
                 transition: 'all var(--transition-medium)',
             }}
             onMouseOver={(e) => e.currentTarget.style.color = 'var(--accent-color)'}
-            onMouseOut={(e) => e.currentTarget.style.color = 'var(--text-primary)'}
+            onMouseOut={(e) => e.currentTarget.style.color = 'var(--text-secondary)'}
         >
             {theme === 'dark' ? <Sun size={20} /> : <Moon size={20} />}
         </button>

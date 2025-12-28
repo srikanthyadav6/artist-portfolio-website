@@ -1,10 +1,34 @@
+import { useEffect, useRef } from 'react';
+import { Link } from 'react-router-dom';
 import { X, ArrowLeft, ArrowRight } from 'lucide-react';
 import { urlFor } from '../sanityClient';
+import PropTypes from 'prop-types';
 
 const PaintingModal = ({ painting, onClose, onNext, onPrev, hasNext, hasPrev }) => {
+    const modalRef = useRef(null);
+    const previousActiveElement = useRef(null);
+
+    // Focus management
+    useEffect(() => {
+        // Store the previously focused element
+        previousActiveElement.current = document.activeElement;
+
+        // Focus the modal
+        if (modalRef.current) {
+            modalRef.current.focus();
+        }
+
+        // Return focus on cleanup
+        return () => {
+            if (previousActiveElement.current) {
+                previousActiveElement.current.focus();
+            }
+        };
+    }, []);
+
     if (!painting) return null;
 
-    // Close on escape key
+    // Close on escape key and navigation
     const handleKeyDown = (e) => {
         if (e.key === 'Escape') onClose();
         if (e.key === 'ArrowRight' && hasNext) onNext();
@@ -13,8 +37,10 @@ const PaintingModal = ({ painting, onClose, onNext, onPrev, hasNext, hasPrev }) 
 
     return (
         <div
+            ref={modalRef}
             role="dialog"
             aria-modal="true"
+            aria-labelledby="modal-title"
             tabIndex={-1}
             onKeyDown={handleKeyDown}
             onClick={onClose}
@@ -22,7 +48,7 @@ const PaintingModal = ({ painting, onClose, onNext, onPrev, hasNext, hasPrev }) 
                 position: 'fixed',
                 inset: 0,
                 zIndex: 2000,
-                background: 'rgba(0, 0, 0, 0.95)',
+                background: 'var(--modal-overlay)',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
@@ -30,17 +56,6 @@ const PaintingModal = ({ painting, onClose, onNext, onPrev, hasNext, hasPrev }) 
                 animation: 'fadeIn 0.3s ease'
             }}
         >
-            <style>{`
-        @keyframes fadeIn {
-          from { opacity: 0; }
-          to { opacity: 1; }
-        }
-        @keyframes slideUp {
-          from { opacity: 0; transform: translateY(20px); }
-          to { opacity: 1; transform: translateY(0); }
-        }
-      `}</style>
-
             {/* Close Button */}
             <button
                 onClick={onClose}
@@ -51,13 +66,13 @@ const PaintingModal = ({ painting, onClose, onNext, onPrev, hasNext, hasPrev }) 
                     right: '2rem',
                     background: 'transparent',
                     border: 'none',
-                    color: 'var(--text-primary)',
+                    color: '#FAFAFA',
                     cursor: 'pointer',
                     padding: '0.5rem',
                     transition: 'color var(--transition-fast)'
                 }}
                 onMouseOver={(e) => e.currentTarget.style.color = 'var(--accent-color)'}
-                onMouseOut={(e) => e.currentTarget.style.color = 'var(--text-primary)'}
+                onMouseOut={(e) => e.currentTarget.style.color = '#FAFAFA'}
             >
                 <X size={28} />
             </button>
@@ -72,7 +87,7 @@ const PaintingModal = ({ painting, onClose, onNext, onPrev, hasNext, hasPrev }) 
                         left: '2rem',
                         top: '50%',
                         transform: 'translateY(-50%)',
-                        background: 'rgba(255,255,255,0.1)',
+                        background: 'var(--modal-btn-bg)',
                         border: 'none',
                         borderRadius: '50%',
                         width: '50px',
@@ -80,17 +95,17 @@ const PaintingModal = ({ painting, onClose, onNext, onPrev, hasNext, hasPrev }) 
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',
-                        color: 'var(--text-primary)',
+                        color: '#FAFAFA',
                         cursor: 'pointer',
                         transition: 'all var(--transition-fast)'
                     }}
                     onMouseOver={(e) => {
                         e.currentTarget.style.background = 'var(--accent-color)';
-                        e.currentTarget.style.color = 'var(--bg-primary)';
+                        e.currentTarget.style.color = '#0A0A0A';
                     }}
                     onMouseOut={(e) => {
-                        e.currentTarget.style.background = 'rgba(255,255,255,0.1)';
-                        e.currentTarget.style.color = 'var(--text-primary)';
+                        e.currentTarget.style.background = 'var(--modal-btn-bg)';
+                        e.currentTarget.style.color = '#FAFAFA';
                     }}
                 >
                     <ArrowLeft size={24} />
@@ -106,7 +121,7 @@ const PaintingModal = ({ painting, onClose, onNext, onPrev, hasNext, hasPrev }) 
                         right: '2rem',
                         top: '50%',
                         transform: 'translateY(-50%)',
-                        background: 'rgba(255,255,255,0.1)',
+                        background: 'var(--modal-btn-bg)',
                         border: 'none',
                         borderRadius: '50%',
                         width: '50px',
@@ -114,32 +129,38 @@ const PaintingModal = ({ painting, onClose, onNext, onPrev, hasNext, hasPrev }) 
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',
-                        color: 'var(--text-primary)',
+                        color: '#FAFAFA',
                         cursor: 'pointer',
                         transition: 'all var(--transition-fast)'
                     }}
                     onMouseOver={(e) => {
                         e.currentTarget.style.background = 'var(--accent-color)';
-                        e.currentTarget.style.color = 'var(--bg-primary)';
+                        e.currentTarget.style.color = '#0A0A0A';
                     }}
                     onMouseOut={(e) => {
-                        e.currentTarget.style.background = 'rgba(255,255,255,0.1)';
-                        e.currentTarget.style.color = 'var(--text-primary)';
+                        e.currentTarget.style.background = 'var(--modal-btn-bg)';
+                        e.currentTarget.style.color = '#FAFAFA';
                     }}
                 >
                     <ArrowRight size={24} />
                 </button>
             )}
 
-            {/* Modal Content */}
+            {/* Modal Content - Outer wrapper with transparency */}
             <div
                 onClick={(e) => e.stopPropagation()}
                 style={{
                     display: 'flex',
-                    gap: '3rem',
+                    gap: '2rem',
                     maxWidth: '1200px',
                     maxHeight: '90vh',
-                    animation: 'slideUp 0.4s ease'
+                    animation: 'slideUp 0.4s ease',
+                    background: 'rgba(255, 255, 255, 0.05)',
+                    backdropFilter: 'blur(8px)',
+                    WebkitBackdropFilter: 'blur(8px)',
+                    borderRadius: '20px',
+                    padding: '1.5rem',
+                    border: '1px solid rgba(255, 255, 255, 0.08)'
                 }}
             >
                 {/* Image */}
@@ -159,12 +180,16 @@ const PaintingModal = ({ painting, onClose, onNext, onPrev, hasNext, hasPrev }) 
                     )}
                 </div>
 
-                {/* Details */}
+                {/* Details - with semi-transparent card */}
                 <div style={{
-                    width: '300px',
+                    width: '320px',
                     display: 'flex',
                     flexDirection: 'column',
-                    justifyContent: 'center'
+                    justifyContent: 'center',
+                    background: 'rgba(255, 255, 255, 0.01)',
+                    borderRadius: '16px',
+                    padding: '2rem',
+                    border: '1px solid rgba(255, 255, 255, 0.01)'
                 }}>
                     <p style={{
                         color: 'var(--accent-color)',
@@ -175,17 +200,18 @@ const PaintingModal = ({ painting, onClose, onNext, onPrev, hasNext, hasPrev }) 
                     }}>
                         {painting.category}
                     </p>
-                    <h2 className="text-serif" style={{
+                    <h2 id="modal-title" className="text-serif" style={{
                         fontSize: '2rem',
                         marginBottom: '1.5rem',
-                        lineHeight: 1.2
+                        lineHeight: 1.2,
+                        color: '#FAFAFA'
                     }}>
                         {painting.title}
                     </h2>
 
                     {painting.dimensions && (
                         <p style={{
-                            color: 'var(--text-secondary)',
+                            color: 'rgba(255, 255, 255, 0.7)',
                             fontSize: '0.9rem',
                             marginBottom: '0.5rem'
                         }}>
@@ -203,17 +229,33 @@ const PaintingModal = ({ painting, onClose, onNext, onPrev, hasNext, hasPrev }) 
                         </p>
                     )}
 
-                    <a
-                        href="/contact"
+                    <Link
+                        to="/contact"
                         className="btn-primary"
                         style={{ textAlign: 'center' }}
+                        onClick={(e) => e.stopPropagation()}
                     >
                         Inquire About This Piece
-                    </a>
+                    </Link>
                 </div>
             </div>
         </div>
     );
+};
+
+PaintingModal.propTypes = {
+    painting: PropTypes.shape({
+        title: PropTypes.string,
+        category: PropTypes.string,
+        image: PropTypes.object,
+        dimensions: PropTypes.string,
+        price: PropTypes.string
+    }),
+    onClose: PropTypes.func.isRequired,
+    onNext: PropTypes.func.isRequired,
+    onPrev: PropTypes.func.isRequired,
+    hasNext: PropTypes.bool.isRequired,
+    hasPrev: PropTypes.bool.isRequired
 };
 
 export default PaintingModal;

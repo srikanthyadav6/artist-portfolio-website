@@ -1,12 +1,16 @@
 import { Link } from 'react-router-dom';
 import { ArrowRight, ArrowDown } from 'lucide-react';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { client, urlFor } from '../sanityClient';
+import Spinner from '../components/ui/Spinner';
+import PaintingModal from '../components/PaintingModal';
 
 const Home = () => {
   const [featuredPaintings, setFeaturedPaintings] = useState([]);
   const [homePage, setHomePage] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [selectedIndex, setSelectedIndex] = useState(null);
 
   useEffect(() => {
     Promise.all([
@@ -18,8 +22,36 @@ const Home = () => {
         setHomePage(page);
         setLoading(false);
       })
-      .catch(console.error);
+      .catch((err) => {
+        if (import.meta.env.DEV) {
+          console.error('Failed to fetch home data:', err.message);
+        }
+        setError('Failed to load content. Please try again.');
+        setLoading(false);
+      });
   }, []);
+
+  const handleOpenModal = useCallback((index) => {
+    setSelectedIndex(index);
+    document.body.style.overflow = 'hidden';
+  }, []);
+
+  const handleCloseModal = useCallback(() => {
+    setSelectedIndex(null);
+    document.body.style.overflow = '';
+  }, []);
+
+  const handleNext = useCallback(() => {
+    if (selectedIndex < featuredPaintings.length - 1) {
+      setSelectedIndex(selectedIndex + 1);
+    }
+  }, [selectedIndex, featuredPaintings.length]);
+
+  const handlePrev = useCallback(() => {
+    if (selectedIndex > 0) {
+      setSelectedIndex(selectedIndex - 1);
+    }
+  }, [selectedIndex]);
 
   if (loading) {
     return (
@@ -30,18 +62,30 @@ const Home = () => {
         justifyContent: 'center',
         background: 'var(--bg-primary)'
       }}>
-        <div style={{ textAlign: 'center' }}>
-          <div style={{
-            width: '40px',
-            height: '40px',
-            border: '2px solid var(--border-color)',
-            borderTopColor: 'var(--accent-color)',
-            borderRadius: '50%',
-            margin: '0 auto 1rem',
-            animation: 'spin 1s linear infinite'
-          }} />
-          <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
-        </div>
+        <Spinner size={40} />
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div
+        className="container"
+        role="alert"
+        style={{ padding: '10rem 0', textAlign: 'center' }}
+      >
+        <h2 className="gradient-text" style={{ marginBottom: '1rem' }}>
+          Oops! Something went wrong
+        </h2>
+        <p style={{ color: 'var(--text-secondary)', marginBottom: '2rem' }}>
+          {error}
+        </p>
+        <button
+          className="btn-primary"
+          onClick={() => window.location.reload()}
+        >
+          Try Again
+        </button>
       </div>
     );
   }
@@ -64,13 +108,16 @@ const Home = () => {
   return (
     <div>
       {/* Hero Section - Full Screen Dramatic */}
-      <section style={{
-        height: '100vh',
-        position: 'relative',
-        display: 'flex',
-        alignItems: 'center',
-        overflow: 'hidden'
-      }}>
+      <section
+        aria-label="Featured artwork hero"
+        style={{
+          height: '100vh',
+          position: 'relative',
+          display: 'flex',
+          alignItems: 'center',
+          overflow: 'hidden'
+        }}
+      >
         {/* Background Image with Overlay */}
         {featuredPaintings[0]?.image && (
           <div style={{
@@ -80,7 +127,7 @@ const Home = () => {
           }}>
             <img
               src={urlFor(featuredPaintings[0].image).width(1920).quality(90).url()}
-              alt=""
+              alt={featuredPaintings[0].title || 'Featured artwork'}
               style={{
                 width: '100%',
                 height: '100%',
@@ -159,7 +206,7 @@ const Home = () => {
         </div>
 
         {/* Scroll Indicator */}
-        <div className="scroll-indicator">
+        <div className="scroll-indicator" aria-hidden="true">
           <p style={{
             fontSize: '0.75rem',
             textTransform: 'uppercase',
@@ -174,20 +221,13 @@ const Home = () => {
             animation: 'bounce 2s infinite'
           }} />
         </div>
-        <style>{`
-            @keyframes fadeInUp {
-              from { opacity: 0; transform: translateY(30px); }
-              to { opacity: 1; transform: translateY(0); }
-            }
-            @keyframes bounce {
-              0%, 100% { transform: translateY(0); }
-              50% { transform: translateY(10px); }
-            }
-          `}</style>
       </section>
 
       {/* Selected Works Section */}
-      <section style={{ padding: '8rem 0', background: 'var(--bg-secondary)' }}>
+      <section
+        aria-label="Selected works"
+        style={{ padding: '8rem 0', background: 'var(--bg-secondary)' }}
+      >
         <div className="container">
           <div style={{ textAlign: 'center', marginBottom: '5rem' }}>
             <p style={{
@@ -213,20 +253,24 @@ const Home = () => {
             {featuredPaintings.map((painting, index) => (
               <div
                 key={painting._id}
-                className="glass-card glow-on-hover"
+                role="button"
+                tabIndex={0}
+                aria-label={`View ${painting.title}`}
+                className="glass-card glow-on-hover featured-card"
                 style={{
                   overflow: 'hidden',
-                  transition: 'transform var(--transition-medium)',
-                  cursor: 'pointer'
+                  cursor: 'pointer',
+                  outline: 'none'
                 }}
-                onMouseOver={(e) => e.currentTarget.style.transform = 'translateY(-8px)'}
-                onMouseOut={(e) => e.currentTarget.style.transform = 'translateY(0)'}
+                onClick={() => handleOpenModal(index)}
+                onKeyDown={(e) => e.key === 'Enter' && handleOpenModal(index)}
               >
                 <div className="image-zoom" style={{ height: '400px' }}>
                   {painting.image && (
                     <img
                       src={urlFor(painting.image).width(700).height(500).url()}
                       alt={painting.title}
+                      loading="lazy"
                       style={{
                         width: '100%',
                         height: '100%',
@@ -239,7 +283,8 @@ const Home = () => {
                   <h3 style={{
                     fontSize: '1.4rem',
                     marginBottom: '0.5rem',
-                    fontWeight: 500
+                    fontWeight: 500,
+                    color: 'var(--text-primary)'
                   }}>
                     {painting.title}
                   </h3>
@@ -273,8 +318,20 @@ const Home = () => {
             </Link>
           </div>
         </div>
-      </section >
-    </div >
+      </section>
+
+      {/* Modal */}
+      {selectedIndex !== null && (
+        <PaintingModal
+          painting={featuredPaintings[selectedIndex]}
+          onClose={handleCloseModal}
+          onNext={handleNext}
+          onPrev={handlePrev}
+          hasNext={selectedIndex < featuredPaintings.length - 1}
+          hasPrev={selectedIndex > 0}
+        />
+      )}
+    </div>
   );
 };
 

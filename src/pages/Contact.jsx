@@ -1,16 +1,15 @@
 import { useState } from 'react';
 import { Send } from 'lucide-react';
 import Toast from '../components/Toast';
+import FormInput from '../components/ui/FormInput';
 
 const Contact = () => {
-    const [result, setResult] = useState("");
     const [sending, setSending] = useState(false);
     const [toast, setToast] = useState(null);
 
     const onSubmit = async (event) => {
         event.preventDefault();
         setSending(true);
-        setResult("Sending....");
         const formData = new FormData(event.target);
 
         formData.append("access_key", import.meta.env.VITE_WEB3FORMS_ACCESS_KEY);
@@ -24,23 +23,23 @@ const Contact = () => {
             const data = await response.json();
 
             if (data.success) {
-                setResult("");
                 setToast({ message: "Message sent successfully!", type: "success" });
                 event.target.reset();
             } else {
                 setToast({ message: data.message || "Something went wrong.", type: "error" });
-                setResult("");
             }
         } catch (error) {
+            if (import.meta.env.DEV) {
+                console.error('Contact form error:', error.message);
+            }
             setToast({ message: "Network error. Please try again.", type: "error" });
-            setResult("");
         }
         setSending(false);
     };
 
     return (
         <div style={{ minHeight: '100vh', paddingTop: '6rem' }}>
-            <section style={{ padding: '4rem 0' }}>
+            <section aria-label="Contact form" style={{ padding: '4rem 0' }}>
                 <div className="container" style={{ maxWidth: '700px' }}>
                     <div style={{ textAlign: 'center', marginBottom: '4rem' }}>
                         <p style={{
@@ -73,123 +72,37 @@ const Contact = () => {
                             gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
                             gap: '1.5rem'
                         }}>
-                            <div>
-                                <label style={{
-                                    display: 'block',
-                                    marginBottom: '0.75rem',
-                                    fontSize: '0.8rem',
-                                    textTransform: 'uppercase',
-                                    letterSpacing: '0.1em',
-                                    color: 'var(--text-secondary)'
-                                }}>
-                                    Name
-                                </label>
-                                <input
-                                    type="text"
-                                    name="name"
-                                    required
-                                    style={{
-                                        width: '100%',
-                                        padding: '1rem 1.25rem',
-                                        border: '1px solid var(--border-color)',
-                                        borderRadius: '6px',
-                                        background: 'var(--bg-tertiary)',
-                                        color: 'var(--text-primary)',
-                                        fontFamily: 'inherit',
-                                        fontSize: '1rem',
-                                        transition: 'border-color var(--transition-fast), box-shadow var(--transition-fast)'
-                                    }}
-                                    onFocus={(e) => {
-                                        e.target.style.borderColor = 'var(--accent-color)';
-                                        e.target.style.boxShadow = '0 0 0 3px var(--accent-glow)';
-                                    }}
-                                    onBlur={(e) => {
-                                        e.target.style.borderColor = 'var(--border-color)';
-                                        e.target.style.boxShadow = 'none';
-                                    }}
-                                />
-                            </div>
-                            <div>
-                                <label style={{
-                                    display: 'block',
-                                    marginBottom: '0.75rem',
-                                    fontSize: '0.8rem',
-                                    textTransform: 'uppercase',
-                                    letterSpacing: '0.1em',
-                                    color: 'var(--text-secondary)'
-                                }}>
-                                    Email
-                                </label>
-                                <input
-                                    type="email"
-                                    name="email"
-                                    required
-                                    style={{
-                                        width: '100%',
-                                        padding: '1rem 1.25rem',
-                                        border: '1px solid var(--border-color)',
-                                        borderRadius: '6px',
-                                        background: 'var(--bg-tertiary)',
-                                        color: 'var(--text-primary)',
-                                        fontFamily: 'inherit',
-                                        fontSize: '1rem',
-                                        transition: 'border-color var(--transition-fast), box-shadow var(--transition-fast)'
-                                    }}
-                                    onFocus={(e) => {
-                                        e.target.style.borderColor = 'var(--accent-color)';
-                                        e.target.style.boxShadow = '0 0 0 3px var(--accent-glow)';
-                                    }}
-                                    onBlur={(e) => {
-                                        e.target.style.borderColor = 'var(--border-color)';
-                                        e.target.style.boxShadow = 'none';
-                                    }}
-                                />
-                            </div>
-                        </div>
-
-                        <div>
-                            <label style={{
-                                display: 'block',
-                                marginBottom: '0.75rem',
-                                fontSize: '0.8rem',
-                                textTransform: 'uppercase',
-                                letterSpacing: '0.1em',
-                                color: 'var(--text-secondary)'
-                            }}>
-                                Message
-                            </label>
-                            <textarea
-                                name="message"
-                                rows="6"
+                            <FormInput
+                                label="Name"
+                                name="name"
+                                type="text"
                                 required
-                                style={{
-                                    width: '100%',
-                                    padding: '1rem 1.25rem',
-                                    border: '1px solid var(--border-color)',
-                                    borderRadius: '6px',
-                                    background: 'var(--bg-tertiary)',
-                                    color: 'var(--text-primary)',
-                                    fontFamily: 'inherit',
-                                    fontSize: '1rem',
-                                    resize: 'vertical',
-                                    transition: 'border-color var(--transition-fast), box-shadow var(--transition-fast)'
-                                }}
-                                onFocus={(e) => {
-                                    e.target.style.borderColor = 'var(--accent-color)';
-                                    e.target.style.boxShadow = '0 0 0 3px var(--accent-glow)';
-                                }}
-                                onBlur={(e) => {
-                                    e.target.style.borderColor = 'var(--border-color)';
-                                    e.target.style.boxShadow = 'none';
-                                }}
+                                placeholder="Your full name"
+                            />
+                            <FormInput
+                                label="Email"
+                                name="email"
+                                type="email"
+                                required
+                                placeholder="your@email.com"
                             />
                         </div>
+
+                        <FormInput
+                            label="Message"
+                            name="message"
+                            type="textarea"
+                            rows={6}
+                            required
+                            placeholder="Tell me about your inquiry..."
+                        />
 
                         <div style={{ marginTop: '1rem' }}>
                             <button
                                 type="submit"
                                 className="btn-primary"
                                 disabled={sending}
+                                aria-busy={sending}
                                 style={{ opacity: sending ? 0.7 : 1 }}
                             >
                                 {sending ? 'Sending...' : 'Send Message'} <Send size={16} />

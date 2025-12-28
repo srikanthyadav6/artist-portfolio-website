@@ -1,12 +1,21 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-theme="dark">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>new-poc</title>
+    <meta name="description" content="Fine art portfolio showcasing original oil paintings - landscapes, portraits, and abstract works." />
+    <meta http-equiv="Content-Security-Policy" 
+          content="default-src 'self'; 
+                   script-src 'self' 'unsafe-inline'; 
+                   style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; 
+                   font-src https://fonts.gstatic.com; 
+                   img-src 'self' https://cdn.sanity.io data: blob:;
+                   connect-src 'self' https://*.sanity.io https://api.web3forms.com;" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <title>Elara Vance | Fine Art Portfolio</title>
   </head>
   <body>
+    <a href="#main-content" class="skip-link">Skip to main content</a>
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
   </body>

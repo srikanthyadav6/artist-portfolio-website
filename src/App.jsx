@@ -5,6 +5,7 @@ import Gallery from './pages/Gallery';
 import About from './pages/About';
 import Contact from './pages/Contact';
 import ScrollToTop from './components/ScrollToTop';
+import ErrorBoundary from './components/ErrorBoundary';
 
 import { ThemeProvider } from './context/ThemeContext';
 
@@ -13,17 +14,22 @@ function App() {
     <ThemeProvider>
       <BrowserRouter>
         <ScrollToTop />
-        <Layout>
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/gallery" element={<Gallery />} />
-            <Route path="/about" element={<About />} />
-            <Route path="/contact" element={<Contact />} />
-          </Routes>
-        </Layout>
+        <ErrorBoundary>
+          <Layout>
+            <main id="main-content">
+              <Routes>
+                <Route path="/" element={<Home />} />
+                <Route path="/gallery" element={<Gallery />} />
+                <Route path="/about" element={<About />} />
+                <Route path="/contact" element={<Contact />} />
+              </Routes>
+            </main>
+          </Layout>
+        </ErrorBoundary>
       </BrowserRouter>
     </ThemeProvider>
   );
 }
 
 export default App;
+

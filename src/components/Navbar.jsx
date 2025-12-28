@@ -3,11 +3,11 @@ import { Link, useLocation } from 'react-router-dom';
 import { Menu, X } from 'lucide-react';
 import { client } from '../sanityClient';
 import ThemeToggle from './ThemeToggle';
-import '../index.css';
+import { DEFAULTS } from '../constants';
 
 const Navbar = () => {
     const [isOpen, setIsOpen] = useState(false);
-    const [siteName, setSiteName] = useState('ELARA VANCE');
+    const [siteName, setSiteName] = useState(DEFAULTS.SITE_NAME);
     const [scrolled, setScrolled] = useState(false);
     const location = useLocation();
 
@@ -16,12 +16,16 @@ const Navbar = () => {
             .then(data => {
                 if (data?.siteName) setSiteName(data.siteName);
             })
-            .catch(console.error);
+            .catch((err) => {
+                if (import.meta.env.DEV) {
+                    console.error('Failed to fetch site settings:', err.message);
+                }
+            });
     }, []);
 
     useEffect(() => {
         const handleScroll = () => {
-            setScrolled(window.scrollY > 50);
+            setScrolled(window.scrollY > DEFAULTS.SCROLL_THRESHOLD);
         };
         window.addEventListener('scroll', handleScroll);
         return () => window.removeEventListener('scroll', handleScroll);
@@ -113,23 +117,31 @@ const Navbar = () => {
                 </div>
 
                 {/* Mobile Menu Icon */}
-                <div
+                <button
                     className="mobile-menu-icon"
                     onClick={toggleMenu}
+                    aria-label={isOpen ? 'Close menu' : 'Open menu'}
+                    aria-expanded={isOpen}
+                    aria-controls="mobile-menu"
                     style={{
                         cursor: 'pointer',
                         display: 'none',
-                        color: 'var(--text-primary)'
+                        color: 'var(--text-primary)',
+                        background: 'none',
+                        border: 'none',
+                        padding: '0.5rem'
                     }}
                 >
                     {isOpen ? <X size={24} /> : <Menu size={24} />}
-                </div>
+                </button>
             </div>
 
             {/* Mobile Menu Overlay */}
             {isOpen && (
-                <div
+                <nav
+                    id="mobile-menu"
                     className="mobile-menu"
+                    aria-label="Mobile navigation"
                     style={{
                         position: 'fixed',
                         top: '70px',
@@ -162,14 +174,8 @@ const Navbar = () => {
                             {link.name}
                         </Link>
                     ))}
-                </div>
+                </nav>
             )}
-
-            <style>{`
-        .desktop-menu a:hover span {
-          width: 100% !important;
-        }
-      `}</style>
         </nav>
     );
 };

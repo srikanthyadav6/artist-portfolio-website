@@ -1,10 +1,12 @@
 import { useState, useEffect } from 'react';
 import { client, urlFor } from '../sanityClient';
 import { PortableText } from '@portabletext/react';
+import Spinner from '../components/ui/Spinner';
 
 const About = () => {
     const [artist, setArtist] = useState(null);
     const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
 
     useEffect(() => {
         client.fetch('*[_type == "artist"][0]')
@@ -12,7 +14,13 @@ const About = () => {
                 setArtist(data);
                 setLoading(false);
             })
-            .catch(console.error);
+            .catch((err) => {
+                if (import.meta.env.DEV) {
+                    console.error('Failed to fetch artist:', err.message);
+                }
+                setError('Failed to load artist profile.');
+                setLoading(false);
+            });
     }, []);
 
     if (loading) {
@@ -23,15 +31,23 @@ const About = () => {
                 alignItems: 'center',
                 justifyContent: 'center'
             }}>
-                <div style={{
-                    width: '40px',
-                    height: '40px',
-                    border: '2px solid var(--border-color)',
-                    borderTopColor: 'var(--accent-color)',
-                    borderRadius: '50%',
-                    animation: 'spin 1s linear infinite'
-                }} />
-                <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
+                <Spinner size={40} />
+            </div>
+        );
+    }
+
+    if (error) {
+        return (
+            <div
+                className="container"
+                role="alert"
+                style={{ padding: '10rem 0', textAlign: 'center' }}
+            >
+                <h2 className="text-serif" style={{ marginBottom: '1rem' }}>Unable to Load Profile</h2>
+                <p style={{ color: 'var(--text-secondary)', marginBottom: '2rem' }}>{error}</p>
+                <button className="btn-primary" onClick={() => window.location.reload()}>
+                    Try Again
+                </button>
             </div>
         );
     }
@@ -46,7 +62,7 @@ const About = () => {
 
     return (
         <div style={{ minHeight: '100vh', paddingTop: '6rem' }}>
-            <section style={{ padding: '4rem 0' }}>
+            <section aria-label="About the artist" style={{ padding: '4rem 0' }}>
                 <div className="container">
                     <div style={{
                         display: 'grid',
