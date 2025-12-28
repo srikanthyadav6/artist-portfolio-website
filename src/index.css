@@ -52,6 +52,10 @@
   /* Modal specific - more transparent in dark mode */
   --modal-overlay: rgba(0, 0, 0, 0.85);
   --modal-btn-bg: rgba(255, 255, 255, 0.1);
+
+  /* Card glass overlay */
+  --card-glass-bg: rgba(0, 0, 0, 0.35);
+  --card-glass-border: rgba(255, 255, 255, 0.15);
 }
 
 /* Light Theme */
@@ -73,7 +77,7 @@
 
   --accent-color: #B08D55;
   /* Slightly darker gold for contrast on light */
-  --accent-glow: rgba(176, 141, 85, 0.2);
+  --accent-glow: rgba(176, 141, 85, 0.8);
   --accent-hover: #C4A777;
 
   --border-color: rgba(0, 0, 0, 0.08);
@@ -87,6 +91,10 @@
   /* Modal specific - more opaque in light mode for better contrast */
   --modal-overlay: rgba(0, 0, 0, 0.90);
   --modal-btn-bg: rgba(255, 255, 255, 0.15);
+
+  /* Card glass overlay - lighter for light theme */
+  --card-glass-bg: rgba(255, 255, 255, 0.7);
+  --card-glass-border: rgba(0, 0, 0, 0.1);
 }
 
 /* Reset */
@@ -510,6 +518,20 @@ a:focus-visible {
 .featured-card:hover,
 .featured-card:focus-within {
   transform: translateY(-8px);
+}
+
+/* Gallery Card Title Animation */
+.card-title {
+  color: var(--text-primary);
+  transition: color var(--transition-medium), letter-spacing var(--transition-medium);
+}
+
+.featured-card:hover .card-title,
+.featured-card:focus-within .card-title,
+.gallery-item:hover .card-title,
+.gallery-item:focus-within .card-title {
+  color: var(--accent-color) !important;
+  letter-spacing: 0.03em;
 }
 
 /* Desktop Menu Link Underline Animation */

@@ -4,6 +4,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { client, urlFor } from '../sanityClient';
 import Spinner from '../components/ui/Spinner';
 import PaintingModal from '../components/PaintingModal';
+import PaintingCard from '../components/PaintingCard';
 
 const Home = () => {
   const [featuredPaintings, setFeaturedPaintings] = useState([]);
@@ -251,53 +252,12 @@ const Home = () => {
             gap: '2.5rem'
           }}>
             {featuredPaintings.map((painting, index) => (
-              <div
+              <PaintingCard
                 key={painting._id}
-                role="button"
-                tabIndex={0}
-                aria-label={`View ${painting.title}`}
-                className="glass-card glow-on-hover featured-card"
-                style={{
-                  overflow: 'hidden',
-                  cursor: 'pointer',
-                  outline: 'none'
-                }}
+                painting={painting}
                 onClick={() => handleOpenModal(index)}
-                onKeyDown={(e) => e.key === 'Enter' && handleOpenModal(index)}
-              >
-                <div className="image-zoom" style={{ height: '400px' }}>
-                  {painting.image && (
-                    <img
-                      src={urlFor(painting.image).width(700).height(500).url()}
-                      alt={painting.title}
-                      loading="lazy"
-                      style={{
-                        width: '100%',
-                        height: '100%',
-                        objectFit: 'cover'
-                      }}
-                    />
-                  )}
-                </div>
-                <div style={{ padding: '1.5rem 2rem' }}>
-                  <h3 style={{
-                    fontSize: '1.4rem',
-                    marginBottom: '0.5rem',
-                    fontWeight: 500,
-                    color: 'var(--text-primary)'
-                  }}>
-                    {painting.title}
-                  </h3>
-                  <p style={{
-                    color: 'var(--text-muted)',
-                    fontSize: '0.85rem',
-                    textTransform: 'uppercase',
-                    letterSpacing: '0.1em'
-                  }}>
-                    {painting.category}
-                  </p>
-                </div>
-              </div>
+                imageHeight="400px"
+              />
             ))}
           </div>
 

@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
-import { client, urlFor } from '../sanityClient';
+import { client } from '../sanityClient';
 import PaintingModal from '../components/PaintingModal';
+import PaintingCard from '../components/PaintingCard';
 import Spinner from '../components/ui/Spinner';
 
 const Gallery = () => {
@@ -185,65 +186,12 @@ const Gallery = () => {
                             gap: '2rem'
                         }}>
                             {filteredPaintings.map((painting, index) => (
-                                <div
+                                <PaintingCard
                                     key={painting._id}
-                                    role="button"
-                                    tabIndex={0}
-                                    aria-label={`View ${painting.title}`}
-                                    className="gallery-item glass-card glow-on-hover"
+                                    painting={painting}
                                     onClick={() => handleOpenModal(index)}
-                                    onKeyDown={(e) => e.key === 'Enter' && handleOpenModal(index)}
-                                    style={{
-                                        overflow: 'hidden',
-                                        borderRadius: '12px',
-                                        cursor: 'pointer',
-                                        outline: 'none',
-                                        transition: 'transform var(--transition-medium)'
-                                    }}
-                                    onFocus={(e) => {
-                                        e.currentTarget.style.boxShadow = '0 0 0 3px var(--accent-color)';
-                                    }}
-                                    onBlur={(e) => {
-                                        e.currentTarget.style.boxShadow = 'none';
-                                    }}
-                                    onMouseOver={(e) => e.currentTarget.style.transform = 'translateY(-8px)'}
-                                    onMouseOut={(e) => e.currentTarget.style.transform = 'translateY(0)'}
-                                >
-                                    <div className="image-zoom" style={{ height: '350px' }}>
-                                        {painting.image && (
-                                            <img
-                                                src={urlFor(painting.image).width(700).height(875).url()}
-                                                alt={painting.title}
-                                                loading="lazy"
-                                                style={{
-                                                    width: '100%',
-                                                    height: '100%',
-                                                    objectFit: 'cover'
-                                                }}
-                                                className="gallery-img"
-                                            />
-                                        )}
-                                    </div>
-                                    {/* Title section below image */}
-                                    <div style={{ padding: '1.5rem 2rem' }}>
-                                        <h3 style={{
-                                            fontSize: '1.4rem',
-                                            marginBottom: '0.5rem',
-                                            fontWeight: 500,
-                                            color: 'var(--text-primary)'
-                                        }}>
-                                            {painting.title}
-                                        </h3>
-                                        <p style={{
-                                            color: 'var(--text-muted)',
-                                            fontSize: '0.85rem',
-                                            textTransform: 'uppercase',
-                                            letterSpacing: '0.1em'
-                                        }}>
-                                            {painting.category}
-                                        </p>
-                                    </div>
-                                </div>
+                                    className="gallery-item"
+                                />
                             ))}
                         </div>
                     )}
