@@ -388,23 +388,25 @@ button {
 
 /* ===== ACCESSIBILITY IMPROVEMENTS ===== */
 
-/* Skip Link */
+/* Skip Link - hidden until focused */
 .skip-link {
   position: absolute;
-  top: -40px;
+  top: -100px;
   left: 0;
   background: var(--accent-color);
   color: var(--bg-primary);
-  padding: 8px 16px;
+  padding: 12px 20px;
   z-index: 10000;
   text-decoration: none;
   font-weight: 500;
-  border-radius: 0 0 4px 0;
-  transition: top 0.2s ease;
+  border-radius: 0 0 8px 0;
+  transition: top 0.3s ease;
+  opacity: 0;
 }
 
 .skip-link:focus {
   top: 0;
+  opacity: 1;
 }
 
 /* Focus visible for keyboard navigation */
