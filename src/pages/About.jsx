@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { client, urlFor } from '../sanityClient';
 import { PortableText } from '@portabletext/react';
+import { Instagram, Twitter, Mail } from 'lucide-react';
 import Spinner from '../components/ui/Spinner';
 
 const About = () => {
@@ -120,10 +121,94 @@ const About = () => {
                             </p>
                             <h1 className="text-serif" style={{
                                 fontSize: 'clamp(2.5rem, 5vw, 4rem)',
-                                marginBottom: '2rem'
+                                marginBottom: '1rem'
                             }}>
                                 {artist.name}
                             </h1>
+
+                            {/* Social Icons */}
+                            <div style={{
+                                display: 'flex',
+                                gap: '1rem',
+                                marginBottom: '2rem'
+                            }}>
+                                <a
+                                    href={artist.instagram || '#'}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    aria-label="Instagram"
+                                    style={{
+                                        color: 'var(--text-secondary)',
+                                        padding: '0.5rem',
+                                        borderRadius: '50%',
+                                        border: '1px solid var(--border-color)',
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                        transition: 'all var(--transition-fast)'
+                                    }}
+                                    onMouseOver={(e) => {
+                                        e.currentTarget.style.color = 'var(--accent-color)';
+                                        e.currentTarget.style.borderColor = 'var(--accent-color)';
+                                    }}
+                                    onMouseOut={(e) => {
+                                        e.currentTarget.style.color = 'var(--text-secondary)';
+                                        e.currentTarget.style.borderColor = 'var(--border-color)';
+                                    }}
+                                >
+                                    <Instagram size={20} />
+                                </a>
+                                <a
+                                    href={artist.twitter || '#'}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    aria-label="Twitter"
+                                    style={{
+                                        color: 'var(--text-secondary)',
+                                        padding: '0.5rem',
+                                        borderRadius: '50%',
+                                        border: '1px solid var(--border-color)',
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                        transition: 'all var(--transition-fast)'
+                                    }}
+                                    onMouseOver={(e) => {
+                                        e.currentTarget.style.color = 'var(--accent-color)';
+                                        e.currentTarget.style.borderColor = 'var(--accent-color)';
+                                    }}
+                                    onMouseOut={(e) => {
+                                        e.currentTarget.style.color = 'var(--text-secondary)';
+                                        e.currentTarget.style.borderColor = 'var(--border-color)';
+                                    }}
+                                >
+                                    <Twitter size={20} />
+                                </a>
+                                <a
+                                    href={`mailto:${artist.email || 'contact@example.com'}`}
+                                    aria-label="Email"
+                                    style={{
+                                        color: 'var(--text-secondary)',
+                                        padding: '0.5rem',
+                                        borderRadius: '50%',
+                                        border: '1px solid var(--border-color)',
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                        transition: 'all var(--transition-fast)'
+                                    }}
+                                    onMouseOver={(e) => {
+                                        e.currentTarget.style.color = 'var(--accent-color)';
+                                        e.currentTarget.style.borderColor = 'var(--accent-color)';
+                                    }}
+                                    onMouseOut={(e) => {
+                                        e.currentTarget.style.color = 'var(--text-secondary)';
+                                        e.currentTarget.style.borderColor = 'var(--border-color)';
+                                    }}
+                                >
+                                    <Mail size={20} />
+                                </a>
+                            </div>
 
                             <div style={{
                                 color: 'var(--text-secondary)',
