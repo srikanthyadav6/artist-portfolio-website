@@ -1,6 +1,6 @@
 // Default values and magic numbers
 export const DEFAULTS = {
-    SITE_NAME: 'ELARA VANCE',
+    SITE_NAME: 'MOULIKA JONNALA',
     SCROLL_THRESHOLD: 50,
 };
 

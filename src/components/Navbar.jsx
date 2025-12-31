@@ -1,27 +1,15 @@
 import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Menu, X } from 'lucide-react';
-import { client } from '../sanityClient';
 import ThemeToggle from './ThemeToggle';
 import { DEFAULTS } from '../constants';
+import { useSiteSettings } from '../context/SiteSettingsContext';
 
 const Navbar = () => {
     const [isOpen, setIsOpen] = useState(false);
-    const [siteName, setSiteName] = useState(DEFAULTS.SITE_NAME);
+    const { siteName } = useSiteSettings();
     const [scrolled, setScrolled] = useState(false);
     const location = useLocation();
-
-    useEffect(() => {
-        client.fetch('*[_type == "siteSettings"][0]')
-            .then(data => {
-                if (data?.siteName) setSiteName(data.siteName);
-            })
-            .catch((err) => {
-                if (import.meta.env.DEV) {
-                    console.error('Failed to fetch site settings:', err.message);
-                }
-            });
-    }, []);
 
     useEffect(() => {
         const handleScroll = () => {

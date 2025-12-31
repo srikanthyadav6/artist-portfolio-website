@@ -62,7 +62,7 @@ async function seed() {
     await client.createOrReplace({
         _id: 'artist-profile',
         _type: 'artist',
-        name: 'Elara Vance',
+        name: 'MOULIKA JONNALA',
         quote: 'My work is an exploration of memory and place. I try not to just paint what I see, but how it felt to be there.',
         bio: [
             {
@@ -79,7 +79,10 @@ async function seed() {
                 children: [{ _type: 'span', _key: 'span2', text: 'Her works have been exhibited in galleries across Seattle, Portland, and San Francisco. When not painting, she teaches workshops on oil techniques and color theory.' }],
                 markDefs: []
             }
-        ]
+        ],
+        instagram: 'https://instagram.com/moulikajonnala',
+        twitter: 'https://twitter.com/moulikajonnala',
+        email: 'moulika@example.com'
     });
     console.log('Artist Profile created!');
 
@@ -99,7 +102,7 @@ async function seed() {
     await client.createOrReplace({
         _id: 'site-settings',
         _type: 'siteSettings',
-        siteName: 'ELARA VANCE',
+        siteName: 'MOULIKA JONNALA',
         socialLinks: [
             { _key: 'ig', platform: 'Instagram', url: 'https://instagram.com' },
             { _key: 'tw', platform: 'Twitter', url: 'https://twitter.com' },
@@ -107,6 +110,17 @@ async function seed() {
         ]
     });
     console.log('Site Settings created!');
+
+    // Seed Contact Page
+    console.log('Creating Contact Page settings...');
+    await client.createOrReplace({
+        _id: 'contact-page',
+        _type: 'contactPage',
+        subheading: 'Get in Touch',
+        heading: "Let's Connect",
+        description: 'Inquiries about commissions, exhibitions, or purchasing artwork.'
+    });
+    console.log('Contact Page settings created!');
 
     // Seed Paintings
     for (const p of dummyPaintings) {

@@ -1,11 +1,29 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Send } from 'lucide-react';
+import { client } from '../sanityClient';
 import Toast from '../components/Toast';
 import FormInput from '../components/ui/FormInput';
+import Spinner from '../components/ui/Spinner';
 
 const Contact = () => {
     const [sending, setSending] = useState(false);
     const [toast, setToast] = useState(null);
+    const [pageContent, setPageContent] = useState(null);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        client.fetch('*[_type == "contactPage"][0]')
+            .then(data => {
+                setPageContent(data);
+                setLoading(false);
+            })
+            .catch((err) => {
+                if (import.meta.env.DEV) {
+                    console.error('Failed to fetch contact page:', err.message);
+                }
+                setLoading(false);
+            });
+    }, []);
 
     const onSubmit = async (event) => {
         event.preventDefault();
@@ -37,6 +55,19 @@ const Contact = () => {
         setSending(false);
     };
 
+    if (loading) {
+        return (
+            <div style={{
+                height: '60vh',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center'
+            }}>
+                <Spinner size={40} />
+            </div>
+        );
+    }
+
     return (
         <div style={{ minHeight: '100vh', paddingTop: '6rem' }}>
             <section aria-label="Contact form" style={{ padding: '4rem 0' }}>
@@ -49,16 +80,16 @@ const Contact = () => {
                             letterSpacing: '0.3em',
                             marginBottom: '1rem'
                         }}>
-                            Get in Touch
+                            {pageContent?.subheading || 'Get in Touch'}
                         </p>
                         <h1 className="text-serif" style={{
                             fontSize: 'clamp(2rem, 4vw, 3rem)',
                             marginBottom: '1rem'
                         }}>
-                            Let's Connect
+                            {pageContent?.heading || "Let's Connect"}
                         </h1>
                         <p style={{ color: 'var(--text-secondary)', maxWidth: '400px', margin: '0 auto' }}>
-                            Inquiries about commissions, exhibitions, or purchasing artwork.
+                            {pageContent?.description || 'Inquiries about commissions, exhibitions, or purchasing artwork.'}
                         </p>
                         <div className="divider" />
                     </div>

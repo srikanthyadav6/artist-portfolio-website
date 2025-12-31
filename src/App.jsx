@@ -8,26 +8,29 @@ import ScrollToTop from './components/ScrollToTop';
 import ErrorBoundary from './components/ErrorBoundary';
 
 import { ThemeProvider } from './context/ThemeContext';
+import { SiteSettingsProvider } from './context/SiteSettingsContext';
 
 function App() {
   return (
-    <ThemeProvider>
-      <BrowserRouter>
-        <ScrollToTop />
-        <ErrorBoundary>
-          <Layout>
-            <main id="main-content">
-              <Routes>
-                <Route path="/" element={<Home />} />
-                <Route path="/gallery" element={<Gallery />} />
-                <Route path="/about" element={<About />} />
-                <Route path="/contact" element={<Contact />} />
-              </Routes>
-            </main>
-          </Layout>
-        </ErrorBoundary>
-      </BrowserRouter>
-    </ThemeProvider>
+    <SiteSettingsProvider>
+      <ThemeProvider>
+        <BrowserRouter>
+          <ScrollToTop />
+          <ErrorBoundary>
+            <Layout>
+              <main id="main-content">
+                <Routes>
+                  <Route path="/" element={<Home />} />
+                  <Route path="/gallery" element={<Gallery />} />
+                  <Route path="/about" element={<About />} />
+                  <Route path="/contact" element={<Contact />} />
+                </Routes>
+              </main>
+            </Layout>
+          </ErrorBoundary>
+        </BrowserRouter>
+      </ThemeProvider>
+    </SiteSettingsProvider>
   );
 }
 

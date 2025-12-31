@@ -27,6 +27,24 @@ export const artistType = defineType({
             title: 'Artist Quote',
             type: 'text',
         }),
+        defineField({
+            name: 'instagram',
+            title: 'Instagram URL',
+            type: 'url',
+            description: 'Full Instagram profile URL',
+        }),
+        defineField({
+            name: 'twitter',
+            title: 'Twitter URL',
+            type: 'url',
+            description: 'Full Twitter/X profile URL',
+        }),
+        defineField({
+            name: 'email',
+            title: 'Email Address',
+            type: 'string',
+            description: 'Contact email address',
+        }),
     ],
     preview: {
         select: {

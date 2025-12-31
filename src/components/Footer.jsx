@@ -1,20 +1,7 @@
-import { useState, useEffect } from 'react';
-import { client } from '../sanityClient';
+import { useSiteSettings } from '../context/SiteSettingsContext';
 
 const Footer = () => {
-    const [siteName, setSiteName] = useState('Elara Vance');
-
-    useEffect(() => {
-        client.fetch('*[_type == "siteSettings"][0]')
-            .then(data => {
-                if (data?.siteName) setSiteName(data.siteName);
-            })
-            .catch((err) => {
-                if (import.meta.env.DEV) {
-                    console.error('Failed to fetch site settings:', err.message);
-                }
-            });
-    }, []);
+    const { siteName } = useSiteSettings();
 
     return (
         <footer style={{
